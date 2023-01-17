@@ -11,25 +11,24 @@ textAreaEl.addEventListener('input', throttle(onTextAreaInput, 500));
 inputEl.addEventListener('input', throttle(onInputValue, 500));
 // formEl.addEventListener("input", throttle(onAllInputArea, 500));
 
+const formData = {};
 savedTextarea();
 savedInputValue();
-const formData = {};
 
 function onFormSubmit(e) {
   e.preventDefault();
-
-  localStorage.removeItem('feedback-form-state');
 
   const formElement = e.currentTarget.elements;
 
   const yourEmail = formElement.email.value;
   const yourComment = formElement.message.value;
 
-  if (yourEmail === '' || yourComment === '') {
-    alert('всі поля мають бути заповнені');
-  } else {
+  if (yourEmail && yourComment) {
+    localStorage.removeItem('feedback-form-state');
     e.currentTarget.reset();
     console.log(formData);
+  } else {
+    alert('всі поля мають бути заповнені');
   }
 }
 
@@ -47,6 +46,7 @@ function savedTextarea() {
   const savedMessage = JSON.parse(localStorage.getItem('feedback-form-state'));
 
   if (savedMessage) {
+    formData.message = savedMessage.message;
     textAreaEl.value = savedMessage.message || '';
   }
 }
@@ -55,6 +55,7 @@ function savedInputValue() {
   const savedInput = JSON.parse(localStorage.getItem('feedback-form-state'));
 
   if (savedInput) {
+    formData.email = savedInput.email;
     inputEl.value = savedInput.email || '';
   }
 }
